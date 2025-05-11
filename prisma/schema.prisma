@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+//Tabla de usuarios
+model User {
+  id                 String        @id
+  email              String?       @unique
+  subscriptionStatus String        @default("free") // Puede ser "free" o "Premium"
+  messageCount       Int           @default(0)
+  chats              Chat[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  Subscription       Subscription?
+}
+
+//Tabla de chats(generados por el usuario)
+model Chat {
+  id        String   @id
+  title     String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  stateData Json? //
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  status    String // "active", "cancelled", "expired"
+  type      String // "monthly", "yearly"
+  startDate DateTime
+  endDate   DateTime
+  txHash    String? // DeFi 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
