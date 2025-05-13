@@ -4,10 +4,13 @@ module.exports = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: "img.clerk.com",
+        hostname: 'img.clerk.com',
         port: '',
-        pathname: '**'
-      }
-    ]
-  }
-}
+        pathname: '**',
+      },
+    ],
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+};

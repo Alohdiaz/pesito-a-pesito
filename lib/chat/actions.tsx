@@ -1306,7 +1306,7 @@ function createMessageDisplay(message: Message): React.ReactNode {
       }
     }
 
-    // Handle assistant text messages
+    // Manejar mensajes del asistente que no son de herramientas
     if (message.role === 'assistant') {
       const content =
         typeof message.content === 'string'
@@ -1315,7 +1315,7 @@ function createMessageDisplay(message: Message): React.ReactNode {
       return <BotMessage content={content} />
     }
 
-    // Tool messages are not displayed directly
+    // Los mensajes de herramientas se manejan aquí
     return null
   } catch (error) {
     console.error('Error in createMessageDisplay:', error)
@@ -1323,7 +1323,7 @@ function createMessageDisplay(message: Message): React.ReactNode {
   }
 }
 
-// The AI component setup
+// El estado de la IA se inicializa aquí
 export const AI = createAI<AIState, UIState>({
   actions: {
     submitUserMessage
@@ -1331,14 +1331,14 @@ export const AI = createAI<AIState, UIState>({
   initialUIState: [],
   initialAIState: { chatId: nanoid(), messages: [] },
 
-  // When AI state changes (and is done), save to database
+  // Cuando la IA cambia de estado, guarda el chat en la base de datos
   onSetAIState: async ({ state, done }) => {
     'use server'
 
     if (done) {
       await saveChatToDatabase(state)
 
-      // Track message count for free users if this is a user action
+      // Sigue los mensajes de la IA
       const { userId } = await auth()
       if (userId) {
         await prisma.user
@@ -1353,14 +1353,14 @@ export const AI = createAI<AIState, UIState>({
     }
   },
 
-  // Convert AI state to UI state for display
+  // Convierte el estado de la IA en un formato que la interfaz de usuario puede usar
   onGetUIState: async () => {
     'use server'
 
     const aiState = getAIState<any>()
     if (!aiState?.messages) return []
 
-    // Convert messages to UI components
+    // Convierte los mensajes de la IA en un formato que la interfaz de usuario puede usar
     return aiState.messages
       .filter((message: any) => message.role !== 'tool')
       .map((message: any) => ({
