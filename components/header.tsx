@@ -116,19 +116,6 @@ export function Header({ isSidebarOpen, setIsSidebarOpen }: HeaderProps) {
             )}
           </Link>
  
-          {/* <a
-            target="_blank"
-            href={}
-            rel="noopener noreferrer"
-            className={cn(
-              buttonVariants({ variant: 'outline', size: 'sm' }),
-              'h-8 hidden md:inline-flex'
-            )}
-            style={{ borderRadius: 0 }}
-          >
-            <IconGitHub />
-            <span className="ml-2">GitHub</span>
-          </a> */}
         </div>
 
         {/* Menú lateral para celulares */}

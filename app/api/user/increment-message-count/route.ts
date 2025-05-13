@@ -36,6 +36,7 @@ export async function POST() {
       return NextResponse.json({ messageCount: 0 })
     }
 
+    
     // Si el usuario tiene una suscripción free, se incrementa el contador de mensajes y se verifica el límite de 3
     const FREE_USER_LIMIT = 3
     if (user.messageCount >= FREE_USER_LIMIT) {

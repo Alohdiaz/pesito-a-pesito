@@ -52,64 +52,6 @@ export async function GET(
 }
 
 /**
- * Actualizar el título de un chat
- */
-export async function PATCH(
-  req: Request,
-  { params }: { params: { chatId: string } }
-) {
-  try {
-    const { userId } = await auth()
-
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Obtiene el estado de suscripción del usuario
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { subscriptionStatus: true }
-    })
-
-    // Solo los usuarios premium pueden actualizar el título del chat
-    if (!user || user.subscriptionStatus !== 'premium') {
-      return NextResponse.json(
-        { error: 'Premium subscription required' },
-        { status: 403 }
-      )
-    }
-
-    const { title } = await req.json()
-
-    if (!title) {
-      return NextResponse.json({ error: 'Title is required' }, { status: 400 })
-    }
-
-    const updatedChat = await prisma.chat.update({
-      where: {
-        id: params.chatId,
-        userId
-      },
-      data: {
-        title
-      }
-    })
-
-    if (!updatedChat) {
-      return NextResponse.json({ error: 'Chat not found' }, { status: 404 })
-    }
-
-    return NextResponse.json({ success: true, chat: updatedChat })
-  } catch (error) {
-    console.error('Chat update error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
-
-/**
  * Eliminar un chat
  */
 export async function DELETE(
